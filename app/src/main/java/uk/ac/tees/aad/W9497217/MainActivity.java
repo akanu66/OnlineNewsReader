@@ -58,17 +58,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(),login.class));
             }else{
                 getCurrentLocation();
-                startActivity(new Intent(getApplicationContext(),NewsScreen.class));
-
             }
         }
-
-        getCurrentLocation();
-        countryNameToCodeConverter( CountryName);
-
-
-
-
 
     }
 
@@ -126,18 +117,28 @@ public class MainActivity extends AppCompatActivity {
                     .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
-                            // Got last known location. In some rare situations this can be null.
+
                             if (location != null)
                             {
                                 CountryName = getCountryName(getApplicationContext(),location.getLatitude(),location.getLongitude());
+                                Intent intent2 = new Intent(getApplicationContext(),NewsScreen.class);
+                                intent2.putExtra("countryName",CountryName);
+                                intent2.putExtra("country", countryNameToCodeConverter( CountryName));
+                                startActivity(intent2);
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), "Unable to fetch location", Toast.LENGTH_SHORT).show();
+                                Intent intent2 = new Intent(getApplicationContext(),NewsScreen.class);
+                                intent2.putExtra("countryName","UK");
+                                intent2.putExtra("country", countryNameToCodeConverter("gb"));
+                                startActivity(intent2);
+
                             }
                         }
                     });
         }
     }
-
-
-
 
 
     public static String getCountryName(Context context, double latitude, double longitude) {
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public String countryNameToCodeConverter(String CountryName){
+    public static String countryNameToCodeConverter(String CountryName){
 
         String CountryCode="";
 

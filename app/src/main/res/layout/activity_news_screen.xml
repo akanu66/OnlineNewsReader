@@ -8,13 +8,14 @@
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginStart="1dp"
-        android:text="@string/mainBannerText"
         android:gravity="center"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/mainBannerText"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/list_view"
+        app:layout_constraintEnd_toStartOf="@+id/countryNameText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,4 +29,17 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4">
 
     </ListView>
+
+    <TextView
+        android:id="@+id/countryNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="7dp"
+        android:text="@string/countryText"
+        app:layout_constraintBottom_toTopOf="@+id/list_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

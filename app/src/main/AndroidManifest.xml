@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".NewsScreen"></activity>
+        <activity android:name=".SingleNews"></activity>
+        <activity android:name=".NewsScreen" />
         <activity android:name=".register" />
         <activity android:name=".login" />
         <activity android:name=".Intro" />

@@ -1,12 +1,12 @@
 package uk.ac.tees.aad.W9497217;
 
-import androidx.annotation.NonNull;
+import  androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,21 +16,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import java.io.IOException;
+
 
 public class NewsScreen extends AppCompatActivity {
 
     ListView listView;
-    String mTitle[] = {"Facebook", "Whatsapp", "Twitter", "Instagram", "Youtube"};
-    String mDescription[] = {"Facebook Description", "Whatsapp Description", "Twitter Description", "Instagram Description", "Youtube Description"};
+    String[] Title;
+    String[] Description ;
+    String[] images ;
+    String[] content;
 
 
 
@@ -41,74 +42,87 @@ public class NewsScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_screen);
 
+
         listView = findViewById(R.id.list_view);
+        TextView trxt = findViewById(R.id.countryNameText);
+        String text = "from "+getIntent().getExtras().getString("countryName");
+        trxt.setText(text);
 
-        getNews(getIntent().getExtras().getString("country"));
+        getNews2(getIntent().getExtras().getString("country"));
 
+    }
 
-        MyAdapter adapter = new MyAdapter(this, mTitle, mDescription);
-        listView.setAdapter(adapter);
+    public void getNews2(final String Country)
+    {
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.
+                Builder().
+                url("http://newsapi.org/v2/top-headlines?country="+Country+"&apiKey=f8efb3bc73074d1fb98131e245f444f8").build();
+
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position ==  0) {
-                    Toast.makeText(getApplicationContext(), "Facebook Description", Toast.LENGTH_SHORT).show();
-                }
-                if (position ==  0) {
-                    Toast.makeText(getApplicationContext(), "Whatsapp Description", Toast.LENGTH_SHORT).show();
-                }
-                if (position ==  0) {
-                    Toast.makeText(getApplicationContext(), "Twitter Description", Toast.LENGTH_SHORT).show();
-                }
-                if (position ==  0) {
-                    Toast.makeText(getApplicationContext(), "Instagram Description", Toast.LENGTH_SHORT).show();
-                }
-                if (position ==  0) {
-                    Toast.makeText(getApplicationContext(), "Youtube Description", Toast.LENGTH_SHORT).show();
-                }
+            public void onFailure(Request request, IOException e) {
+                Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(com.squareup.okhttp.Response response) throws IOException {
+                final String fata = response.body().string();
+                NewsScreen.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        JsonObject jsonObject = new JsonParser().parse(fata).getAsJsonObject();
+                        int size = jsonObject.get("articles").getAsJsonArray().size();
+
+                         Title=new String[size];
+                         Description = new String[size];
+                         images = new String[size];
+                         content = new String[size];
+
+                       for( int i=0;i<size;i++ )
+                       {
+                           if(i<200){
+                               try {
+                                   JsonElement loop = jsonObject.get("articles").getAsJsonArray().get(i);
+                                   Title[i] = loop.getAsJsonObject().get("title").getAsString();
+                                   Description[i] = loop.getAsJsonObject().get("description").getAsString();
+                                   images[i] = loop.getAsJsonObject().get("urlToImage").getAsString();
+                                   content[i] = loop.getAsJsonObject().get("source").getAsJsonObject().get("name").getAsString();
+
+                               }catch (Exception e){
+
+                               }
+                           }
+                       }
+
+                        MyAdapter adapter = new MyAdapter(getApplicationContext(), Title,  content);
+                        listView.setAdapter(adapter);
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                                Intent intent = new Intent(getApplicationContext(),SingleNews.class);
+                                intent.putExtra("title",Title[position]);
+                                intent.putExtra("image",images[position]);
+                                intent.putExtra("content",Description[position]);
+                                intent.putExtra("des",content[position]);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                });
             }
         });
     }
 
-
-    public void getNews(String Country){
-
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        String url = "https://newsapi.org/v2/top-headlines?country="+Country+"&apiKey=f8efb3bc73074d1fb98131e245f444f8";
-
-        StringRequest stringRequest = new StringRequest(
-                Request.Method.GET,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
-
-                        if(jsonObject.get("name").getAsString().equals("nouser")) {
-                            Toast.makeText(getApplicationContext(), "Incorrect Details", Toast.LENGTH_SHORT).show();
-
-                        }else {
-                            Toast.makeText(getApplicationContext(), "Welcome "+jsonObject.get("name"), Toast.LENGTH_SHORT).show();
-                            SharedPreferences sharedPreferences = getSharedPreferences("state", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("login","yes");
-                            editor.apply();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(),error.toString(),Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-        requestQueue.add(stringRequest);
-
+    @Override
+    public void onBackPressed() {
+        finish();
+        finishAffinity();
     }
 }
 
@@ -119,16 +133,20 @@ class MyAdapter extends ArrayAdapter<String> {
     String rDescription[];
 
 
-    MyAdapter (Context c, String title[], String description[]) {
-        super(c, R.layout.row, R.id.textView1, title);
+
+    MyAdapter (Context c, String title[], String description[])
+    {
+        super(c, R.layout.row, R.id.textView1,title);
         this.context = c;
         this.rTitle = title;
         this.rDescription = description;
+
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
+    {
 
         LayoutInflater layoutInflater = (LayoutInflater) getContext().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = layoutInflater.inflate(R.layout.row, parent, false);
@@ -141,6 +159,7 @@ class MyAdapter extends ArrayAdapter<String> {
 
         return row;
     }
-}
 
+
+}
 

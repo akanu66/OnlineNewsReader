@@ -17,4 +17,7 @@
     <string name="sub_title">Sub Title</string>
     <string name="main_title">Main Title</string>
 
+    <string name="countryText">TextView</string>
+    <string name="online_news_reader">Online News Reader</string>
+
 </resources>
