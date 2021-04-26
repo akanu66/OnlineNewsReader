@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Online News Reader</string>
+    <string name="let_s_learn">Let\'s Read
+    </string>
+    <string name="learn_english_easy">Online News Reader</string>
+    <string name="todo">TODO</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="password">Password</string>
+    <string name="filled_box_dense">Filled box dense</string>
+    <string name="login">Login</string>
+    <string name="create_account">Create Account</string>
+    <string name="register">Register</string>
+    <string name="welcome">Welcome!</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="mainBannerText">LATEST NEWS</string>
+    <string name="sub_title">Sub Title</string>
+    <string name="main_title">Main Title</string>
+
+</resources>
