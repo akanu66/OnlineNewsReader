@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Button bttn = findViewById(R.id.buttonRead);
+        bttn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCurrentLocation();
+            }
+        });
        final TextView textviewed = findViewById(R.id.hello);
 
         sharedpreferences = getSharedPreferences("state", Context.MODE_PRIVATE);
@@ -63,8 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getCurrentLocation();
+    }
 
     private void getCurrentLocation()
     {

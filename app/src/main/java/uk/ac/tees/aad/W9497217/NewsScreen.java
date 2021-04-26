@@ -59,7 +59,7 @@ public class NewsScreen extends AppCompatActivity {
 
         Request request = new Request.
                 Builder().
-                url("http://newsapi.org/v2/top-headlines?country="+Country+"&apiKey=f8efb3bc73074d1fb98131e245f444f8").build();
+                url("http://newsapi.org/v2/top-headlines?country="+Country+"&apiKey="+getResources().getString(R.string.apikey)).build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override

@@ -37,10 +37,12 @@ public class register extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                String url = "http://192.168.31.181/OnlineNews/register.php?mobile="+
+
+                String url = getResources().getString(R.string.userServerEndpoint)+"register.php?mobile="+
                         mobile.getText().toString()+"&password="+
                         password.getText().toString()+"&name="+
                         name.getText().toString();
+
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
                 StringRequest stringRequest = new StringRequest(

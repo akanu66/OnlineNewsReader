@@ -50,7 +50,7 @@ public class login extends AppCompatActivity {
             public void onClick(View v) {
 
                 RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-                String url = "http://192.168.31.181/OnlineNews/login.php?mobile="+mobile.getText().toString()+"&password="+pass.getText().toString();
+                String url = getResources().getString(R.string.userServerEndpoint)+"login.php?mobile="+mobile.getText().toString()+"&password="+pass.getText().toString();
 
                 StringRequest stringRequest = new StringRequest(
                         Request.Method.GET,
@@ -58,6 +58,7 @@ public class login extends AppCompatActivity {
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
+
                                 JsonObject jsonObject = new JsonParser().parse(response).getAsJsonObject();
 
                                 if(jsonObject.get("name").getAsString().equals("nouser")) {

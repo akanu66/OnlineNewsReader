@@ -16,8 +16,12 @@
     <string name="mainBannerText">LATEST NEWS</string>
     <string name="sub_title">Sub Title</string>
     <string name="main_title">Main Title</string>
-
+    <string name="userServerEndpoint">http://35.177.32.94/OnlineNews/</string>
     <string name="countryText">TextView</string>
     <string name="online_news_reader">Online News Reader</string>
+    <string name="buttonread">Explore News</string>
+    <string name="apikey">f8efb3bc73074d1fb98131e245f444f8</string>
+    <string name="newsapiEndPoint">http://newsapi.org/v2/top-headlines</string>
+
 
 </resources>
